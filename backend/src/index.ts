@@ -1,8 +1,17 @@
-import { Hono } from 'hono'
-import routes from './routes'
+import { Hono } from "hono";
+import { serve } from "@hono/node-server";
+import auth from "./routes/auth";
+import dotenv from "dotenv";
 
-const app = new Hono()
+dotenv.config();
 
-app.route('/api', routes)
+const app = new Hono();
 
-app.fire()  // Or app.listen(3000) for Node environment
+app.route("/api/auth", auth);
+
+serve({
+  fetch: app.fetch,
+  port: 3000,
+});
+
+console.log("Backend running at http://localhost:3000");

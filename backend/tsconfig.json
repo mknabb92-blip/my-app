@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "rootDir": "./",
+    "rootDir": "src",
     "target": "ES2022",
-    "module": "ESNext",
+    "module": "CommonJS",
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -10,9 +10,6 @@
     "skipLibCheck": true,
     "outDir": "dist",
     "resolveJsonModule": true,
-    "verbatimModuleSyntax": true
   },
-  "include": ["./**/*.ts"]
+  "include": ["./src/**/*.ts"]
 }
-
-
