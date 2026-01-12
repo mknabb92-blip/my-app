@@ -9,6 +9,9 @@ const parseId = (c: Context) => {
   return id;
 };
 
+const isSkuDuplicateError = (err: any) =>
+  err?.code === "P2002" && Array.isArray(err.meta?.target) && err.meta.target.includes("sku");
+
 export const ProductController = {
   createProduct: async (c: Context) => {
     try {
@@ -23,6 +26,15 @@ export const ProductController = {
             errors: err.errors,
           },
           400
+        );
+      }
+
+      if (isSkuDuplicateError(err)) {
+        return c.json(
+          {
+            message: "sku already exists",
+          },
+          409
         );
       }
 
@@ -75,6 +87,15 @@ export const ProductController = {
         );
       }
 
+      if (isSkuDuplicateError(err)) {
+        return c.json(
+          {
+            message: "sku already exists",
+          },
+          409
+        );
+      }
+
       if (err.code === "P2025") {
         return c.json({ message: "product not found" }, 404);
       }
@@ -99,6 +120,15 @@ export const ProductController = {
             errors: err.errors,
           },
           400
+        );
+      }
+
+      if (isSkuDuplicateError(err)) {
+        return c.json(
+          {
+            message: "sku already exists",
+          },
+          409
         );
       }
 
