@@ -28,7 +28,7 @@ const Signup: React.FC<Props> = ({ goDashboard, goLogin }) => {
     try {
       setLoading(true);
 
-      const res = await fetch(`${API_BASE}/signup`, {
+      const res = await fetch(`${API_BASE}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
