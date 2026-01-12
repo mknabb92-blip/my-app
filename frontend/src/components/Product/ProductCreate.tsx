@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { productApi } from "../../api/productApi";
 import type { Product, ProductStatus } from "../..//types/product";
+import {productFormSchema} from "../../validation/productFormSchema"
+
 type Props = {
   onCreated: () => void;
   onCancel: () => void;
@@ -16,29 +18,36 @@ const ProductCreate: React.FC<Props> = ({ onCreated, onCancel }) => {
   const [loading, setLoading] = useState(false);
 
   const handleCreate = async () => {
-    if (!name || !price || !sku || !stock) {
-      alert("please fill required fields.");
+
+    const raw = {
+      name,
+      description,
+      price, // string, zod will coerce
+      sku,
+      stock, // string, zod will coerce
+      status,
+    };
+    
+    const result = productFormSchema.safeParse(raw);
+
+    if (!result.success) {
+      const flat = result.error.flatten();
+      const fieldErrors = flat.fieldErrors;
+
+      const messages = Object.entries(fieldErrors)
+        .flatMap(([field, msgs]) =>
+          (msgs || []).map((m) => `${field}: ${m}`)
+        )
+        .join("\n");
+
+      alert(messages || "invalid input");
       return;
     }
 
-    const priceNum = Number(price);
-    const stockNum = Number(stock);
-
-    if (Number.isNaN(priceNum) || Number.isNaN(stockNum)) {
-      alert("price and stock must be numbers.");
-      return;
-    }
 
     try {
       setLoading(true);
-      await productApi.create({
-        name,
-        description,
-        price: priceNum,
-        sku,
-        stock: stockNum,
-        status,
-      });
+      await productApi.create(result.data);
       alert("product created");
       await onCreated();
     } catch (err: any) {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { productApi } from "../../api/productApi";
 import type { Product } from "../../types/product";
-import ProductDashboard from "./productDashboard";
-import ProductCreate from "./productCreate";
-import ProductUpdate from "./productUpdate";
+import ProductDashboard from "./ProductDashboard";
+import ProductCreate from "./ProductCreate";
+import ProductUpdate from "./ProductUpdate";
 
 type View = "dashboard" | "create" | "update";
 
