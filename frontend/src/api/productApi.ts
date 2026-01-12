@@ -1,5 +1,4 @@
-const API_BASE = "http://localhost:3000";
-
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:3000";
 import type { Product, ProductStatus } from "../types/product";
 
 const getAuthHeaders = () => {
@@ -12,7 +11,7 @@ const getAuthHeaders = () => {
 
 export const productApi = {
   async list(): Promise<Product[]> {
-    const res = await fetch(`${API_BASE}/api/product`, {
+    const res = await fetch(`${API_BASE }/api/product`, {
       headers: getAuthHeaders(),
     });
 
@@ -33,7 +32,7 @@ export const productApi = {
     stock: number;
     status: ProductStatus;
   }): Promise<Product> {
-    const res = await fetch(`${API_BASE}/api/product`, {
+    const res = await fetch(`${API_BASE }/api/product`, {
       method: "POST",
       headers: getAuthHeaders(),
       body: JSON.stringify(data),
