@@ -2,7 +2,9 @@ import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { cors } from "hono/cors"
 import auth from "./routes/auth";
+import product from "./routes/product"
 import dotenv from "dotenv";
+import { globalAuthMiddleware } from "./middlewares/auth.middleware";
 
 dotenv.config();
 
@@ -15,7 +17,12 @@ app.use(
   })
 );
 
+
+// apply auth middleware to every request except signup/login
+app.use("/*", globalAuthMiddleware);
+
 app.route("/api/auth", auth);
+app.route("/api/product", product);
 
 const port = 3000;
 
