@@ -2,20 +2,41 @@ import React from "react";
 // import { Page } from "../App";
 
 type Props = {
+  isLoggedIn: boolean;
   goSignup: () => void;
   goLogin: () => void;
+  goProduct: () => void;
+  logout: () => void;
 };
 
-const Dashboard: React.FC<Props> = ({ goSignup, goLogin }) => {
+const Dashboard: React.FC<Props> = ({
+  isLoggedIn,
+  goSignup,
+  goLogin,
+  goProduct,
+  logout,
+}) => {
   return (
     <div>
-      <h1>welcome my project</h1>
-      <p>simple demo for sign up and login.</p>
+      {!isLoggedIn && (
+        <>
+          <p>simple demo for sign up and login.</p>
+          <button onClick={goSignup}>sign up</button>
+          <button style={{ marginLeft: 8 }} onClick={goLogin}>
+            login
+          </button>
+        </>
+      )}
 
-      <button onClick={goSignup}>sign up</button>
-      <button style={{ marginLeft: 8 }} onClick={goLogin}>
-        login
-      </button>
+      {isLoggedIn && (
+        <>
+          <p>you are logged in.</p>
+          <button onClick={goProduct}>product</button>
+          <button style={{ marginLeft: 8 }} onClick={logout}>
+            logout
+          </button>
+        </>
+      )}
     </div>
   );
 };
