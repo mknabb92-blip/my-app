@@ -2,11 +2,19 @@ import React, { useState, useEffect } from "react";
 import Dashboard from "./components/Dashboard";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
+import ProductPage from "./components/Product/ProductPage";
 
-export type Page = "dashboard" | "signup" | "login";
+export type Page = "dashboard" | "signup" | "login" | "product";
 
 const App: React.FC = () => {
   const [page, setPage] = useState<Page>("dashboard");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) setIsLoggedIn(true);
+  }, []);
 
   // runtime error catcher
   useEffect(() => {
@@ -18,12 +26,27 @@ const App: React.FC = () => {
     return () => window.removeEventListener("error", handler);
   }, []);
 
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+    setPage("dashboard");
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    setPage("dashboard");
+  };
+
   return (
     <div style={{ fontFamily: "sans-serif", maxWidth: 400, margin: "40px auto" }}>
       {page === "dashboard" && (
         <Dashboard
+          isLoggedIn={isLoggedIn}
           goSignup={() => setPage("signup")}
+
           goLogin={() => setPage("login")}
+          goProduct={() => setPage("product")}
+          logout={handleLogout}
         />
       )}
 
@@ -38,7 +61,12 @@ const App: React.FC = () => {
         <Login
           goDashboard={() => setPage("dashboard")}
           goSignup={() => setPage("signup")}
+          onLoginSuccess={handleLoginSuccess}
         />
+      )}
+
+      {page === "product" && isLoggedIn && (
+        <ProductPage goDashboard={() => setPage("dashboard")} />
       )}
     </div>
   );

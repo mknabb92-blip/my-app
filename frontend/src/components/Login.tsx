@@ -5,9 +5,10 @@ const API_BASE = "http://localhost:3000";
 type Props = {
   goDashboard: () => void;
   goSignup: () => void;
+  onLoginSuccess: () => void;
 };
 
-const Login: React.FC<Props> = ({ goDashboard, goSignup }) => {
+const Login: React.FC<Props> = ({ goDashboard, goSignup, onLoginSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,14 +31,22 @@ const Login: React.FC<Props> = ({ goDashboard, goSignup }) => {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        alert(data.error || "login failed.");
+        alert(data.error || data.message || "login failed.");
+        return;
+      }
+
+      if (!data.token) {
+        alert("no token in login response.");
         return;
       }
 
       // normally you save token:
       // localStorage.setItem("token", data.token);
 
+      localStorage.setItem("token", data.token);
+
       alert("Congratulation!");
+      onLoginSuccess();
       goDashboard();
     } catch (err) {
       console.error(err);
